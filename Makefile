@@ -25,29 +25,42 @@ run:
 	@echo "▶️  Running Flutter app..."
 	flutter run
 
-# List available emulators and run the first one
+# List available emulators and launch selected one
 emul:
 	@echo "📱 Available emulators:"
-	@emulator -list-avds | head -1 | xargs -I {} sh -c 'if [ -n "{}" ]; then echo "🚀 Starting emulator: {}"; emulator -avd {} & else echo "❌ No emulators found. Create one with: avdmanager create avd"; fi'
+	@emulator_output=$$(flutter emulators 2>/dev/null); \
+	if [ $$? -ne 0 ]; then \
+		echo "❌ Failed to get emulators. Make sure Flutter is installed."; \
+		exit 1; \
+	fi; \
+	echo "$$emulator_output" | grep -E '^[a-zA-Z0-9_][a-zA-Z0-9_.-]*[[:space:]]*•.*•.*•' | while IFS= read -r line; do \
+		emulator_id=$$(echo "$$line" | awk '{print $$1}'); \
+		emulator_name=$$(echo "$$line" | awk -F'•' '{gsub(/^[ \t]+|[ \t]+$$/, "", $$2); print $$2}'); \
+		printf "%-30s (%s)\n" "$$emulator_name" "$$emulator_id"; \
+	done > /tmp/emulators_list; \
+	if [ ! -s /tmp/emulators_list ]; then \
+		echo "❌ No emulators found. Create one with: flutter emulators --create"; \
+		exit 1; \
+	fi; \
+	nl -w2 -s'. ' /tmp/emulators_list; \
+	echo ""; \
+	printf "🎯 Choose emulator (number): "; \
+	read choice; \
+	selected_line=$$(sed -n "$${choice}p" /tmp/emulators_list); \
+	if [ -n "$$selected_line" ]; then \
+		emulator_id=$$(echo "$$selected_line" | sed 's/.*(\([^)]*\)).*/\1/'); \
+		emulator_name=$$(echo "$$selected_line" | sed 's/ *(.*//' | sed 's/^[[:space:]]*//'); \
+		echo "🚀 Starting emulator: $$emulator_name ($$emulator_id)"; \
+		flutter emulators --launch "$$emulator_id"; \
+	else \
+		echo "❌ Invalid selection"; \
+	fi; \
+	rm -f /tmp/emulators_list
 
 # List emulators with numbers for easy selection
 list-emulators:
 	@echo "📱 Available emulators:"
-	@emulator -list-avds | nl -v1 -s'. '
-
-# Run specific emulator by number
-emul1 emul2 emul3 emul4 emul5:
-	@$(eval EMUL_NUM := $(subst emul,,$@))
-	@echo "🚀 Starting emulator #$(EMUL_NUM)..."
-	@EMUL_NAME=$$(emulator -list-avds | sed -n '$(EMUL_NUM)p'); \
-	if [ -n "$$EMUL_NAME" ]; then \
-		echo "📱 Launching emulator: $$EMUL_NAME"; \
-		emulator -avd "$$EMUL_NAME" & \
-	else \
-		echo "❌ Emulator #$(EMUL_NUM) not found!"; \
-		echo "Available emulators:"; \
-		emulator -list-avds | nl -v1 -s'. '; \
-	fi
+	@flutter emulators
 
 # Show help
 help:
@@ -55,10 +68,7 @@ help:
 	@echo "  make clean    - Clean Flutter project"
 	@echo "  make re       - Clean, build and run"
 	@echo "  make run      - Run the app (default)"
-	@echo "  make emul     - Launch first available emulator"
-	@echo "  make emul1    - Launch emulator #1"
-	@echo "  make emul2    - Launch emulator #2"
-	@echo "  make emul3    - Launch emulator #3"
+	@echo "  make emul     - Choose and launch an emulator interactively"
 	@echo "  make list-emulators - Show numbered list of emulators"
 	@echo "  make kill-emulators - Kill all running emulators"
 	@echo "  make help     - Show this help message"
@@ -66,7 +76,7 @@ help:
 # Kill all running emulators
 kill-emulators:
 	@echo "🔪 Killing all running emulators..."
-	@pkill -f "emulator" 2>/dev/null || echo "No emulator processes found"
+	@pkill -f "flutter_tools.*emulator" 2>/dev/null || echo "No Flutter emulator processes found"
 	@adb devices | grep emulator | cut -f1 | xargs -I {} adb -s {} emu kill 2>/dev/null || true
 	@echo "✅ All emulators killed"
 

@@ -240,6 +240,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+  particles_network:
+    dependency: "direct main"
+    description:
+      name: particles_network
+      sha256: "637a8d25867ba94cede942d9cb526669c9c8d56a2f89b8d8bbf951e75bd56797"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.8.0"
   path:
     dependency: transitive
     description:

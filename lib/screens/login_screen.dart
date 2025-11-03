@@ -54,70 +54,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF00BABC), // 42 teal color
-              Color(0xFF00A3A5),
-            ],
-          ),
-        ),
-        child: SafeArea(
+    return  SafeArea(
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                // 42 Logo or App Name
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(100),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: const Text(
-                    '42',
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF00BABC),
-                    ),
+                Expanded(
+                  child: Image(
+                    image: AssetImage("assets/scompanionLogowtbg.png"),
+                    fit: BoxFit.contain,
                   ),
                 ),
-                const SizedBox(height: 50),
-                
-                // App Title
-                const Text(
-                  'Swifty Companion',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                
-                // Subtitle
-                const Text(
-                  'Connect with your 42 account',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                  ),
-                ),
-                const SizedBox(height: 60),
-                
-                // Login Button
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(horizontal: 40),
@@ -125,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: _isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF00BABC),
+                      foregroundColor: const Color(0xFF013154),
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
@@ -134,38 +81,37 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: _isLoading
                         ? const SizedBox(
-                            height: 20,
-                            width: 20,
+                            height: 24,
+                            width: 24,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFF00BABC),
+                                Color(0xFF000E20),
                               ),
                             ),
                           )
                         : const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.login, size: 24),
+                              Icon(Icons.login, size: 24, color: const Color(0xFF000E20)),
                               SizedBox(width: 10),
                               Text(
                                 'Login with 42',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
+                                  color: Color(0xFF000E20)
                                 ),
                               ),
                             ],
                           ),
                   ),
                 ),
-                const SizedBox(height: 40),
-                
-                // Info text
+                const SizedBox(height: 20),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Text(
-                    'By logging in, you agree to access your 42 profile information to enhance your experience.',
+                    'By logging in, you agree to access your 42 profile information.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
@@ -176,8 +122,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-        ),
-      ),
     );
   }
 }

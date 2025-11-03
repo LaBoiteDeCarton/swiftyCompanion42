@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:particles_network/particles_network.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'services/oauth_service.dart';
@@ -22,12 +23,28 @@ class MyApp extends StatelessWidget {
       title: 'Swifty Companion',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(222, 9, 115, 92),
-          primary: const Color.fromARGB(222, 9, 115, 92),
+          seedColor: const Color.fromARGB(255, 41, 123, 74),
+          primary: const Color.fromARGB(255, 9, 115, 92),
         ),
         useMaterial3: true,
       ),
-      home: const AuthWrapper(),
+      home: Scaffold(
+        backgroundColor: const Color(0xFF000E20),
+        body: Stack(
+          children: [
+            ParticleNetwork(
+          touchActivation: true, // to Activate touch
+          particleCount: 80, // Number of particles
+          maxSpeed: 0.5, // Maximum particle speed
+          maxSize: 2.5, // Maximum particle size
+          lineDistance: 80, // Maximum distance for connecting lines
+          particleColor: const Color(0xFF013154),
+          lineColor: const Color.fromARGB(255, 6, 52, 97),
+          touchColor: const Color.fromARGB(255, 12, 71, 129),
+        ),
+        AuthWrapper()],
+        ),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -58,6 +75,11 @@ class _AuthWrapperState extends State<AuthWrapper> {
           _isLoggedIn = isLoggedIn;
           _isLoading = false;
         });
+      }
+      if (isLoggedIn) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
       }
     } catch (e) {
       if (mounted) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:particles_network/particles_network.dart';
 import '../services/oauth_service.dart';
 import 'login_screen.dart';
 
@@ -65,11 +66,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Stack(
+  children: [
+    ParticleNetwork(
+          touchActivation: true, // to Activate touch
+          particleCount: 160, // Number of particles
+          maxSpeed: 0.5, // Maximum particle speed
+          maxSize: 2.5, // Maximum particle size
+          lineDistance: 120, // Maximum distance for connecting lines
+          particleColor: const Color(0xFF013154),
+          lineColor: const Color.fromARGB(255, 6, 52, 97),
+          touchColor: const Color.fromARGB(255, 12, 71, 129),
+        ),
+    Scaffold(
+      backgroundColor: const Color.fromARGB(0, 40, 94, 174),
       appBar: AppBar(
-        title: const Text('Swifty Companion'),
-        backgroundColor: const Color.fromARGB(223, 9, 115, 92),
-        foregroundColor: Colors.white,
+        title: Row(
+          children : [
+            Image(
+              image: AssetImage('assets/scompanionLogowtbg2.png'),
+              height: 50,
+              ),
+            Text('wifty Companion', 
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+            ),),
+          ]
+        ),
+        toolbarHeight: 80,
+        backgroundColor: const Color.fromARGB(142, 40, 94, 174),
+        foregroundColor: const Color.fromARGB(255, 255, 255, 255),
         actions: [
           IconButton(
             onPressed: _handleLogout,
@@ -81,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00BABC)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 17, 73, 73)),
               ),
             )
           : _userProfile == null
@@ -114,19 +142,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF00BABC), Color(0xFF00A3A5)],
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
+                        // decoration: BoxDecoration(
+                        //   gradient: const LinearGradient(
+                        //     colors: [Color(0xFF00BABC), Color(0xFF00A3A5)],
+                        //   ),
+                        //   borderRadius: BorderRadius.circular(15),
+                        // ),
                         child: Column(
                           children: [
                             // Profile Image
                             CircleAvatar(
                               radius: 50,
                               backgroundImage: _userProfile!['image'] != null
-                                  ? NetworkImage(_userProfile!['image']['versions']['large'])
+                                  ? NetworkImage(_userProfile!['image']['versions']['small'])
                                   : null,
                               backgroundColor: Colors.white,
                               child: _userProfile!['image'] == null
@@ -190,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
+      )]
     );
   }
 
@@ -237,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<dynamic> projects = _userProfile!['projects_users'];
     projects.sort((a, b) => b['id'].compareTo(a['id'])); // Sort by newest first
     
-    return projects.take(5).map((project) {
+    return projects.map((project) {
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 8),
