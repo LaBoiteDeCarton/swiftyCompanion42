@@ -33,7 +33,7 @@ emul:
 		echo "❌ Failed to get emulators. Make sure Flutter is installed."; \
 		exit 1; \
 	fi; \
-	echo "$$emulator_output" | grep -E '^[a-zA-Z0-9_][a-zA-Z0-9_.-]*[[:space:]]*•.*•.*•' | while IFS= read -r line; do \
+	echo "$$emulator_output" | grep -E '^[a-zA-Z0-9_][a-zA-Z0-9_.-]*[[:space:]]*•.*•.*•' | tail -n +2 | while IFS= read -r line; do \
 		emulator_id=$$(echo "$$line" | awk '{print $$1}'); \
 		emulator_name=$$(echo "$$line" | awk -F'•' '{gsub(/^[ \t]+|[ \t]+$$/, "", $$2); print $$2}'); \
 		printf "%-30s (%s)\n" "$$emulator_name" "$$emulator_id"; \

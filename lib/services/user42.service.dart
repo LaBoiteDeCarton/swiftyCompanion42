@@ -17,7 +17,7 @@ class User42Service {
     }
   }
 
-  /// Get user's projects with pagination
+  /// Get user's projects
   static Future<Map<String, dynamic>> getUserProjectsPaginated(
     String login, {
     int page = 1,
