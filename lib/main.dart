@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:particles_network/particles_network.dart';
-import 'screens/login_screen.dart';
-import 'screens/home_screen.dart';
-import 'services/oauth_service.dart';
+import 'package:swiftycompanion/view/search.view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,22 +26,29 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
+      builder:(context, child) {
+        return Container(
+          color: const Color(0xFF000E20),
+          child: Stack(
+            children: [
+              
+              ParticleNetwork(
+              touchActivation: true, // to Activate touch
+              particleCount: 120, // Number of particles
+              maxSpeed: 0.5, // Maximum particle speed
+              maxSize: 2.5, // Maximum particle size
+              lineDistance: 80, // Maximum distance for connecting lines
+              particleColor: const Color.fromARGB(255, 2, 62, 105),
+              lineColor: const Color.fromARGB(255, 6, 52, 97),
+              touchColor: const Color.fromARGB(255, 12, 71, 129),
+            ),
+            child!],
+          ),
+        );
+      },
       home: Scaffold(
-        backgroundColor: const Color(0xFF000E20),
-        body: Stack(
-          children: [
-            ParticleNetwork(
-          touchActivation: true, // to Activate touch
-          particleCount: 80, // Number of particles
-          maxSpeed: 0.5, // Maximum particle speed
-          maxSize: 2.5, // Maximum particle size
-          lineDistance: 80, // Maximum distance for connecting lines
-          particleColor: const Color(0xFF013154),
-          lineColor: const Color.fromARGB(255, 6, 52, 97),
-          touchColor: const Color.fromARGB(255, 12, 71, 129),
-        ),
-        AuthWrapper()],
-        ),
+        backgroundColor: Colors.transparent,
+        body: SearchView(),
       ),
       debugShowCheckedModeBanner: false,
     );
@@ -58,52 +63,14 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
-  bool _isLoading = true;
-  bool _isLoggedIn = false;
-
   @override
   void initState() {
     super.initState();
-    _checkAuthStatus();
-  }
-
-  Future<void> _checkAuthStatus() async {
-    try {
-      final isLoggedIn = await OAuthService.isLoggedIn();
-      if (mounted) {
-        setState(() {
-          _isLoggedIn = isLoggedIn;
-          _isLoading = false;
-        });
-      }
-      if (isLoggedIn) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoggedIn = false;
-          _isLoading = false;
-        });
-      }
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00BABC)),
-          ),
-        ),
-      );
-    }
-
-    return _isLoggedIn ? const HomeScreen() : const LoginScreen();
+    return const SearchView();
   }
 }
 
