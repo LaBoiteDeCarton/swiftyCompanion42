@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             children: [
               
               ParticleNetwork(
-              touchActivation: true, // to Activate touch
+              touchActivation: false, // to Activate touch
               particleCount: 120, // Number of particles
               maxSpeed: 0.5, // Maximum particle speed
               maxSize: 2.5, // Maximum particle size
