@@ -68,6 +68,11 @@ help:
 	@echo "  make clean    - Clean Flutter project"
 	@echo "  make re       - Clean, build and run"
 	@echo "  make run      - Run the app (default)"
+	@echo "  make build    - Build app for release (APK)"
+	@echo "  make build-android - Build Android APK"
+	@echo "  make build-ios - Build iOS app"
+	@echo "  make build-web - Build web app"
+	@echo "  make build-apk - Build APK (same as build-android)"
 	@echo "  make emul     - Choose and launch an emulator interactively"
 	@echo "  make list-emulators - Show numbered list of emulators"
 	@echo "  make kill-emulators - Kill all running emulators"
@@ -92,6 +97,30 @@ build-apk:
 	@echo "✅ APK built successfully!"
 	@echo "📍 Location: build/app/outputs/flutter-apk/app-release.apk"
 
+# Build app (default: APK for Android)
+build:
+	@echo "🏗️  Building Flutter app..."
+	flutter build apk --release
+	@echo "✅ Build completed successfully!"
+	@echo "📍 APK Location: build/app/outputs/flutter-apk/app-release.apk"
+
+# Build for specific platforms
+build-android:
+	@echo "🤖 Building for Android..."
+	flutter build apk --release
+	@echo "✅ Android APK built successfully!"
+
+build-ios:
+	@echo "🍎 Building for iOS..."
+	flutter build ios --release
+	@echo "✅ iOS build completed!"
+
+build-web:
+	@echo "🌐 Building for Web..."
+	flutter build web --release
+	@echo "✅ Web build completed!"
+	@echo "📍 Web files location: build/web/"
+
 # Build and install APK
 install: build-apk
 	@echo "📲 Installing APK..."
@@ -106,4 +135,4 @@ info:
 	@echo "\n🎮 Available emulators:"
 	flutter emulators
 
-.PHONY: all clean re run emul list-emulators help kill-emulators build-apk install info
+.PHONY: all clean re run emul list-emulators help kill-emulators build build-android build-ios build-web build-apk install info
